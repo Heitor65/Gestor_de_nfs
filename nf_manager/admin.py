@@ -3,6 +3,7 @@ from .models import Nf
 
 @admin.register(Nf)
 class NfAdmin(admin.ModelAdmin):
+    list_filter = ('status',)
     list_display = ('razao_social', 'cnpj', 'op', 'pessoa_contato', 'servico', 'status')
     search_fields = ('razao_social', 'cnpj', 'op', 'pessoa_contato')
     fieldsets = (
@@ -22,4 +23,3 @@ class NfAdmin(admin.ModelAdmin):
             'fields': ('descricao',)
         }),
     )
-    list_filter = ('status',)
