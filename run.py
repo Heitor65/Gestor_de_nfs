@@ -5,15 +5,8 @@ import webbrowser
 import time
 
 # ─── Caminhos ────────────────────────────────────────────────────────────────
-pasta_raiz = os.path.dirname(os.path.abspath(__file__))
-
-setup = os.path.join(
-    pasta_raiz,
-    "setup"
-)
 
 requirements = os.path.join(
-    setup,
     "requirements.txt"
 )
 
@@ -46,7 +39,6 @@ subprocess.run(
         "manage.py",
         "makemigrations"
     ],
-    cwd=setup,
     check=True
 )
 
@@ -58,7 +50,6 @@ subprocess.run(
         "manage.py",
         "migrate"
     ],
-    cwd=setup,
     check=True
 )
 
@@ -71,7 +62,6 @@ servidor = subprocess.Popen(
         "manage.py",
         "runserver"
     ],
-    cwd=setup
 )
 
 # Espera servidor subir
