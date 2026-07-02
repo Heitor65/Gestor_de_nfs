@@ -18,8 +18,16 @@ class Nf(models.Model):
     email_contato = models.EmailField("Email de Contato", blank=True, null=True)
     servico = models.CharField("Serviço", max_length=100, default="")
     valor = models.DecimalField("Valor", max_digits=8, decimal_places=2)
-    status = models.CharField("Status", max_length=20, choices=[('pendente', 'Pendente'), ('aprovada', 'Aprovada'), ('rejeitada', 'Rejeitada')], default='pendente')
-    descricao = models.TextField("Descrição", blank=True, null=True)
+    status = models.CharField("Status", max_length=20, choices=[('pendente', 'Pendente'), ('aprovada', 'Aprovada'), ('emitido', 'Emitido')], default='pendente')
+    descricao = models.TextField("Descrição (Opcional)", blank=True, null=True)
+
+    def aprovar(self):
+        self.status = 'aprovada'
+        self.save()
+    
+    def emitir(self):
+        self.status = 'emitido'
+        self.save()
 
     def __str__(self):
         return f"NF {self.razao_social} - {self.cnpj} - {self.op}"

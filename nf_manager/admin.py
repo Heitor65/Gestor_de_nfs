@@ -1,11 +1,18 @@
 from django.contrib import admin
 from .models import Nf
 
+@admin.action(description='Aprovar NFs selecionadas')
+def aprovar_nfs(modeladmin, request, queryset):
+    for nf in queryset:
+        nf.aprovar()
+
+
 @admin.register(Nf)
 class NfAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     list_display = ('razao_social', 'cnpj', 'op', 'pessoa_contato', 'servico', 'status')
     search_fields = ('razao_social', 'cnpj', 'op', 'pessoa_contato')
+    list_editable = ('status',)
     fieldsets = (
         (None, {
             'fields': ('razao_social', 'cnpj', 'op', 'inscricao_estadual', 'inscricao_municipal')
@@ -13,7 +20,7 @@ class NfAdmin(admin.ModelAdmin):
         ('Endereço', {
             'fields': ('cep', 'uf', 'cidade', 'bairro', 'logradouro', 'numero', 'complemento')
         }),
-        ('Informações de Contato', {
+        ('Informações de Contato (Opcional)', {
             'fields': ('pessoa_contato', 'numero_contato', 'email_contato')
         }),
         ('Serviço e Status', {
@@ -23,3 +30,4 @@ class NfAdmin(admin.ModelAdmin):
             'fields': ('descricao',)
         }),
     )
+    actions = [aprovar_nfs]
