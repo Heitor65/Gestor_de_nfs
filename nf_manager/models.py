@@ -22,6 +22,9 @@ def validate_email(value):
 class Nf(models.Model):
     razao_social = models.CharField("Razão Social", max_length=100, default="")
     cnpj = models.CharField("CNPJ", max_length=14, default="", validators=[validate_cnpj])
+    numero_nfse = models.CharField("Número da NFSe", max_length=20, default="")
+    data_emissao = models.DateField("Data de Emissão", blank=True, null=True)
+    codigo_verificacao = models.CharField("Código de Verificação", max_length=20, default="")
     op = models.CharField("Ordem de Produção (OP)", max_length=4, default="")
     cep = models.CharField("CEP", max_length=8, default="", blank=True, null=True, validators=[validate_cep])
     uf = models.CharField("UF", max_length=2, default="RJ")

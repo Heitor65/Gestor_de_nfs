@@ -14,8 +14,8 @@ class NfAdmin(admin.ModelAdmin):
     search_fields = ('razao_social', 'cnpj', 'op', 'pessoa_contato')
     list_editable = ('status',)
     fieldsets = (
-        (None, {
-            'fields': ('razao_social', 'cnpj', 'op', 'inscricao_estadual', 'inscricao_municipal')
+        ('Informações da NFSe', {
+            'fields': ('razao_social', 'cnpj', 'op', 'codigo_verificacao', 'numero_nfse', 'inscricao_estadual', 'inscricao_municipal')
         }),
         ('Endereço', {
             'fields': ('cep', 'uf', 'cidade', 'bairro', 'logradouro', 'numero', 'complemento')
