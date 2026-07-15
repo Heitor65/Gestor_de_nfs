@@ -87,10 +87,10 @@ class Contato(models.Model):
     nome = models.CharField("Pessoa de Contato", max_length=100, blank=True, null=True)
     numero_contato = models.CharField("Número de Contato", max_length=20, blank=True, null=True, validators=[_validate_phone])
     email_contato = models.EmailField("Email de Contato", blank=True, null=True, validators=[_validate_email])
-    empresa = models.ForeignKey(Empresa, on_delete=models.SET_NULL, related_name="contatos")
+    empresa = models.ForeignKey(Empresa, on_delete=models.SET_DEFAULT, default="Sem empresa", related_name="contatos")
 
 class HistoricoAlteracao(models.Model):
-    nf = models.ForeignKey(Nf, on_delete=models.NO_ACTION, related_name="historico_alteracoes")
+    nf = models.ForeignKey(Nf, on_delete=models.DO_NOTHING, related_name="historico_alteracoes")
     data_hora = models.DateTimeField(auto_now_add=True)
     usuario = models.CharField("Usuário", max_length=100, default="")
     campo_alterado = models.CharField("Campo Alterado", max_length=100, default="")
