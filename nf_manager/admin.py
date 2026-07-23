@@ -13,7 +13,7 @@ def aprovar_nfs(modeladmin, request, queryset):
 @admin.register(Nf)
 class NfAdmin(admin.ModelAdmin):
     list_filter = ('status',)
-    list_display = ('op', 'empresa__razao_social', 'servico', 'status')
+    list_display = ('op', 'empresa__razao_social', 'servico', 'status', 'data_emissao_nfse')
     search_fields = ('op', 'empresa__razao_social', 'empresa__cnpj')
     list_editable = ('status',)
     fieldsets = (
@@ -27,7 +27,7 @@ class NfAdmin(admin.ModelAdmin):
             'fields': ('servico', 'valor', 'status')
         }),
         (None, {
-            'fields': ('descricao',)
+            'fields': ('descricao', 'data_emissao_nfse')
         }),
     )
     actions = [aprovar_nfs]
