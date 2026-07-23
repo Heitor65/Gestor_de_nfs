@@ -1,5 +1,8 @@
 from django.contrib import admin
+from django.urls import path
 from .models import Nf, Empresa, Contato
+from .views import exportar_notas_mes
+
 
 @admin.action(description='Aprovar NFs selecionadas')
 def aprovar_nfs(modeladmin, request, queryset):
@@ -15,13 +18,10 @@ class NfAdmin(admin.ModelAdmin):
     list_editable = ('status',)
     fieldsets = (
         ('Informações da NFSe', {
-            'fields': ('razao_social', 'cnpj', 'op', 'codigo_verificacao', 'numero_nfse', 'inscricao_estadual', 'inscricao_municipal')
+            'fields': ('empresa', 'op', 'codigo_verificacao', 'numero_nfse')
         }),
         ('Endereço', {
             'fields': ('cep', 'uf', 'cidade', 'bairro', 'logradouro', 'numero', 'complemento')
-        }),
-        ('Informações de Contato (Opcional)', {
-            'fields': ('pessoa_contato', 'numero_contato', 'email_contato')
         }),
         ('Serviço e Status', {
             'fields': ('servico', 'valor', 'status')
@@ -31,6 +31,14 @@ class NfAdmin(admin.ModelAdmin):
         }),
     )
     actions = [aprovar_nfs]
+
+    def get_urls(self):
+        urls_originais = super().get_urls()
+        urls_novas = [
+            path('exportar/', self.admin_site.admin_view(exportar_notas_mes), name='nf_exportar'),
+        ]
+        return urls_novas + urls_originais
+
 
 @admin.register(Empresa)
 class EmpresaAdmin(admin.ModelAdmin):
