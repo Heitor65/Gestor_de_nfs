@@ -6,8 +6,8 @@ import time
 
 # ─── Caminhos ────────────────────────────────────────────────────────────────
 
-requirements = os.path.join(
-    "requirements.txt"
+dependecies = os.path.join(
+    "pyproject.toml"
 )
 
 # ─── Início ──────────────────────────────────────────────────────────────────
@@ -20,12 +20,8 @@ print("\n[1/4] Instalando dependências Python...")
 
 subprocess.run(
     [
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "-r",
-        requirements
+        "uv",
+        "sync",
     ],
     check=True
 )
