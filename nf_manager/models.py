@@ -6,7 +6,7 @@ from .choices import UFChoices, StatusChoices
 class Nf(models.Model):
     empresa = models.ForeignKey("Empresa", on_delete=models.RESTRICT, related_name="nfs")
     op = models.CharField("Ordem de Produção (OP)", max_length=4, default="", validators=[_validate_op])
-    cep = models.CharField("CEP", max_length=8, default="", blank=True, null=True, validators=[_validate_cep])
+    cep = models.CharField("CEP", max_length=8, default="", blank=True, null=True) #validators=[_validate_cep]
     uf = models.CharField("UF", max_length=2, default="RJ", choices=UFChoices.choices)
     cidade = models.CharField("Cidade", max_length=100, default="Rio de Janeiro")
     bairro = models.CharField("Bairro", max_length=100, default="")
