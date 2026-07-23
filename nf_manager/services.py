@@ -18,7 +18,7 @@ def gerar_planilha_notas_emitidas(mes, ano):
     sheet['f6'] = "numero_nfse"
 
     for i, nota in enumerate(notas, start=7):
-        sheet[f'b{i}'] = nota.data_emissao_nfse
+        sheet[f'b{i}'] = nota.data_emissao_nfse.replace(tzinfo=None)
         sheet[f'c{i}'] = nota.empresa.razao_social
         sheet[f'd{i}'] = nota.op
         sheet[f'e{i}'] = nota.valor
