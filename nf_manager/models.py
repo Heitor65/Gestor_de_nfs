@@ -23,13 +23,7 @@ class Nf(models.Model):
     xml_nfse = models.TextField("XML da NFSe", blank=True, null=True)
     mensagens_erro = models.JSONField ("Mensagens de Erro", blank=True, null=True)
     tentativa_emissao_em = models.DateTimeField("Tentativa de Emissão em", blank=True, null=True)
-    nota_substituta = models.ForeignKey(
-    "self",
-    on_delete=models.SET_NULL,
-    null=True,
-    blank=True,
-    related_name="nota_substituida",
-    )
+    nota_substituta = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True, related_name="nota_substituida")
 
     def aprovar(self):
         if self.status != StatusChoices.PENDENTE:

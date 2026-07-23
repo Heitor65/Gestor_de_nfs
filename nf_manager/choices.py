@@ -35,3 +35,4 @@ class StatusChoices(models.TextChoices):
     EMITIDO = "emitido", "Emitido"
     CANCELADA = "cancelada", "Cancelada"
     SUBSTITUIDA = "substituida", "Substituída"
+    RECURSADA = "recursada", "Recursada"
