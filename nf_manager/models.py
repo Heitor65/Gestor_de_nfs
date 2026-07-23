@@ -32,18 +32,26 @@ class Nf(models.Model):
     )
 
     def aprovar(self):
+        if self.status != StatusChoices.PENDENTE:
+            raise ValueError("A NF deve estar pendente para ser aprovada.")
         self.status = StatusChoices.APROVADA
         self.save()
     
     def emitir(self):
+        if self.status != StatusChoices.APROVADA:
+            raise ValueError("A NF deve estar aprovada antes de ser emitida.")
         self.status = StatusChoices.EMITIDO
         self.save()
 
     def cancelar(self):
+        if self.status != StatusChoices.EMITIDO:
+            raise ValueError("A NF deve estar emitida para ser cancelada.")
         self.status = StatusChoices.CANCELADA
         self.save()
 
     def substituir(self):
+        if self.status != StatusChoices.CANCELADA:
+            raise ValueError("A NF deve estar cancelada para ser substituída.")
         self.status = StatusChoices.SUBSTITUIDA
         self.save()
     
