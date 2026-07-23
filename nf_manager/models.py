@@ -1,37 +1,21 @@
 from django.db import models
-from django.core.exceptions import ValidationError
-from brutils import is_valid_cnpj,remove_symbols_cnpj, is_valid_cep, remove_symbols_cep, get_address_from_cep,  is_valid_phone, remove_symbols_phone, is_valid_email
-
-def _validate_cnpj(value):
-    if not is_valid_cnpj(remove_symbols_cnpj(value)):
-        raise ValidationError("%(value)s não é um CNPJ válido.", params={"value": value})
-
-def _validate_cep(value):
-    if value and not is_valid_cep(remove_symbols_cep(value)):
-        raise ValidationError("%(value)s não é um CEP válido.", params={"value": value})
-
-def _validate_phone(value):
-    if value and not is_valid_phone(remove_symbols_phone(value)):
-        raise ValidationError("%(value)s não é um telefone válido.", params={"value": value})
-
-def _validate_email(value):
-    if value and not is_valid_email(value):
-        raise ValidationError("%(value)s não é um email válido.", params={"value": value})
+from .validators import _validate_cnpj, _validate_cep, _validate_phone, _validate_email, _validate_op, _validate_numero_end
+from .choices import UFChoices, StatusChoices
 
 
 class Nf(models.Model):
     empresa = models.ForeignKey("Empresa", on_delete=models.RESTRICT, related_name="nfs")
-    op = models.CharField("Ordem de Produção (OP)", max_length=4, default="")
+    op = models.CharField("Ordem de Produção (OP)", max_length=4, default="", validators=[_validate_op])
     cep = models.CharField("CEP", max_length=8, default="", blank=True, null=True, validators=[_validate_cep])
-    uf = models.CharField("UF", max_length=2, default="RJ")
-    cidade = models.CharField("Cidade", max_length=100, default="")
+    uf = models.CharField("UF", max_length=2, default="RJ", choices=UFChoices.choices)
+    cidade = models.CharField("Cidade", max_length=100, default="Rio de Janeiro")
     bairro = models.CharField("Bairro", max_length=100, default="")
     logradouro = models.CharField("Logradouro", max_length=100, default="")
-    numero = models.CharField("Número", max_length=10, default="")
-    complemento = models.CharField("Complemento", max_length=100, default="")
+    numero = models.CharField("Número", max_length=10, default="", validators=[_validate_numero_end])
+    complemento = models.CharField("Complemento", max_length=100, default="", blank=True, null=True)
     servico = models.CharField("Serviço", max_length=100, default="")
     valor = models.DecimalField("Valor", max_digits=8, decimal_places=2)
-    status = models.CharField("Status", max_length=20, choices=[('pendente', 'Pendente'), ('aprovada', 'Aprovada'), ('emitido', 'Emitido'), ('cancelada', 'Cancelada'), ('substituida', 'Substituída')], default='pendente')
+    status = models.CharField("Status", max_length=20, choices=StatusChoices.choices, default='pendente')
     descricao = models.TextField("Descrição (Opcional)", blank=True, null=True)
     numero_nfse = models.CharField("Número da NFSe", max_length=20, blank=True, null=True)
     codigo_verificacao = models.CharField("Código de Verificação", max_length=20, blank=True, null=True)
@@ -47,31 +31,20 @@ class Nf(models.Model):
     related_name="nota_substituida",
     )
 
-    def save(self, *args, **kwargs):
-        if self.cep:
-            endereco = get_address_from_cep(self.cep, raise_exceptions=True)
-
-            self.uf = endereco["uf"]
-            self.cidade = endereco["localidade"]
-            self.bairro = endereco["bairro"]
-            self.logradouro = endereco["logradouro"]
-
-        super().save(*args, **kwargs)
-
     def aprovar(self):
-        self.status = 'aprovada'
+        self.status = StatusChoices.APROVADA
         self.save()
     
     def emitir(self):
-        self.status = 'emitido'
+        self.status = StatusChoices.EMITIDO
         self.save()
 
     def cancelar(self):
-        self.status = 'cancelada'
+        self.status = StatusChoices.CANCELADA
         self.save()
 
     def substituir(self):
-        self.status = 'substituida'
+        self.status = StatusChoices.SUBSTITUIDA
         self.save()
     
     def __str__(self):
