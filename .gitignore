@@ -10,3 +10,10 @@ db.sqlite3
 *.p12
 *.key
 *.crt
+
+nf_manager/tests
+
+.vscode
+
+rps_builder.py
+client.py
